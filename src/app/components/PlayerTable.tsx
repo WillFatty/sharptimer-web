@@ -98,9 +98,11 @@ const PlayerTable: React.FC = () => {
               {maps.map((map, index) => (
                 <div
                   key={index}
-                  className={`bg-dark px-3 py-2 rounded-lg text-sm cursor-pointer ${
-                    selectedMap === map ? 'bg-blue-600' : ''
-                  } hover:bg-blue-700 transition duration-300 ease-in-out`}
+                  className={`px-3 py-2 rounded-lg text-sm cursor-pointer transition duration-300 ease-in-out ${
+                    selectedMap === map
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-dark hover:bg-blue-700'
+                  }`}
                   onClick={() => setSelectedMap(map)}
                 >
                   {map}
