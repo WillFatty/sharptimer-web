@@ -8,7 +8,7 @@ import Image from 'next/image';
 import logo from '../assets/logo.png';
 
 const SharpTimerPanel: React.FC = () => {
-  const [showFooter, setShowFooter] = useState(true);
+  const [showFooter, setShowFooter] = useState(false);
 
   return (
     <div className="min-h-screen bg-darker text-white pb-10">
