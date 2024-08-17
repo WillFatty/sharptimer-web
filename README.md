@@ -18,4 +18,9 @@ STEAM_API_KEY=[STEAMAPIKEY] (https://steamcommunity.com/dev/apikey)
 DEFAULT_SURF_MAP=beginner
 DEFAULT_BHOP_MAP=arcane
 ```
+- Run ``` npm install ```
+- Run ``` npm run build ```
+- Run ``` npm run start ```
 
+## Alternative
+- Just fork the repository and use vercel and import the environment variables.
