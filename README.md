@@ -1,6 +1,6 @@
 [sharptimer-web-panel](https://github.com/Letaryat/sharptimer-web-panel) by [Letaryat](https://github.com/Letaryat) remade in [Next.js](https://nextjs.org/)
 
-[DEMO!!](https://affinitycs2.com/sharptimer) The demo doesnt represent this repository, its for my own server/website.
+[DEMO!!](https://sharptimer-web-demo.vercel.app/)
 
 - Without Server Info Enabled ![preview](https://i.imgur.com/HYoNVq8.png)
 
