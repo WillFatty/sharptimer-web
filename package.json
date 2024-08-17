@@ -14,10 +14,8 @@
     "gamedig": "^5.1.0",
     "mysql2": "^3.11.0",
     "next": "^14.2.5",
-    "react": "^18.3.1",
-    "react-dom": "^18",
-    "react-server-dom-webpack": "^0.0.1",
-    "webpack-node-externals": "^3.0.0"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/gamedig": "^5.0.3",
@@ -26,7 +24,6 @@
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
-    "null-loader": "^4.0.1",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
