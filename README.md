@@ -59,7 +59,7 @@ export interface ServerConfig {
 ```
 
 
-- Run ``` npm install --force```
+- Run ``` npm install ```
 - Run ``` npm run build ```
 - Run ``` npm run start ```
 
