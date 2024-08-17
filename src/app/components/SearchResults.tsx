@@ -43,6 +43,20 @@ const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState<'surf' | 'bhop'>('surf');
+  const [avatars, setAvatars] = useState<Record<string, string>>({});
+
+  const fetchAvatars = async (steamIDs: string[]) => {
+    try {
+      const response = await fetch(`/api/steam-avatar?steamids=${steamIDs.join(',')}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setAvatars(prevAvatars => ({ ...prevAvatars, ...data }));
+    } catch (error) {
+      console.error('Error fetching Steam avatars:', error);
+    }
+  };
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -56,7 +70,12 @@ const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        setResults(data.filter((result: SearchResult) => result.MapName.startsWith(selectedType)));
+        const filteredResults = data.filter((result: SearchResult) => result.MapName.startsWith(selectedType));
+        setResults(filteredResults);
+
+        // Fetch avatars for the results
+        const steamIDs = filteredResults.map((result: SearchResult) => result.SteamID);
+        fetchAvatars(steamIDs);
       } catch (error) {
         console.error('Error fetching search results:', error);
         setError('Failed to fetch search results. Please try again later.');
@@ -126,7 +145,19 @@ const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
                 <th scope="row" className="px-6 py-4 font-medium whitespace-nowrap text-white text-center bg-[#101219] rounded-l-lg w-1/6">
                   <span className="ml-4">#{result.Rank}</span>
                 </th>
-                <td className="px-6 py-4 text-center bg-[#101219] w-1/3">{result.PlayerName}</td>
+                <td className="px-6 py-4 text-center bg-[#101219] w-1/3">
+                  <div className="flex items-center justify-center">
+                    <img src={avatars[result.SteamID] || '/default-avatar.png'} alt={`${result.PlayerName}'s avatar`} className="w-8 h-8 rounded-full mr-2" />
+                    <a
+                      href={`https://steamcommunity.com/profiles/${result.SteamID}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-blue-500 transition-colors duration-200"
+                    >
+                      {result.PlayerName}
+                    </a>
+                  </div>
+                </td>
                 <td className="px-6 py-4 text-center bg-[#101219] w-1/4">{result.FormattedTime}</td>
                 <td className="px-6 py-4 text-center bg-[#101219] rounded-r-lg w-1/4">{result.MapName}</td>
               </tr>
