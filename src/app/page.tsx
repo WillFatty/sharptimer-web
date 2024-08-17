@@ -1,4 +1,4 @@
-import SharpTimerPanel from './components/SharpTimerPanel ';
+import SharpTimerPanel from './components/SharpTimerPanel';
 
 export default function Home() {
   return (

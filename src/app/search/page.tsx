@@ -1,19 +1,14 @@
 'use client';
 
-import React from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import React, { Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import SearchResults from '../components/SearchResults';
 import SearchBar, { SearchBarProps } from '../components/SearchBar';
 
-const SearchPage: React.FC = () => {
+function SearchContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const query = searchParams.get('q') || '';
-
-  const handleSearch = (searchQuery: string) => {
-    router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
-  };
 
   return (
     <div className="container mx-auto p-4">
@@ -21,12 +16,22 @@ const SearchPage: React.FC = () => {
         <Link href="/" className="text-blue-500 hover:text-blue-600">
           ← Back to Home
         </Link>
-        <SearchBar initialQuery={query} onSearch={handleSearch} />
+        <SearchBar initialQuery={query} />
       </div>
-      <h1 className="text-2xl font-bold my-4">Search Results for "{query}"</h1>
+      {query ? (
+        <p>Search for &quot;{query}&quot;</p>
+      ) : (
+        <p>No search query provided</p>
+      )}
       <SearchResults query={query} />
     </div>
   );
-};
+}
 
-export default SearchPage;
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SearchContent />
+    </Suspense>
+  );
+}

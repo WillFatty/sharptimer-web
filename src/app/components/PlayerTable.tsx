@@ -12,6 +12,7 @@ interface PlayerRecord {
   TimesFinished: number;
   LastFinished: number;
   Style: number;
+  SteamAvatar: string;
 }
 
 const RankIcon = () => (
@@ -52,8 +53,12 @@ const PlayerTable: React.FC = () => {
   useEffect(() => {
     if (selectedMap) {
       fetchTopPlayers(selectedMap);
+    } else if (maps.length > 0) {
+      const defaultMap = selectedType === 'surf' ? process.env.DEFAULT_SURF_MAP : process.env.DEFAULT_BHOP_MAP;
+      const mapToSelect = maps.includes(defaultMap || '') ? defaultMap : maps[0];
+      setSelectedMap(mapToSelect || '');
     }
-  }, [selectedMap]);
+  }, [selectedMap, maps, selectedType]);
 
   const fetchMaps = async (type: 'surf' | 'bhop') => {
     try {
@@ -62,8 +67,11 @@ const PlayerTable: React.FC = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      setMaps(data.map((row: { MapName: string }) => row.MapName.replace(`${type}_`, '')));
-      setSelectedMap(''); // Reset selected map when changing type
+      const mapNames = data.map((row: { MapName: string }) => row.MapName.replace(`${type}_`, ''));
+      setMaps(mapNames);
+      
+      // Reset selected map when changing type
+      setSelectedMap('');
     } catch (error) {
       console.error('Error fetching maps:', error);
       setError('Failed to fetch maps. Please try again later.');
@@ -85,6 +93,8 @@ const PlayerTable: React.FC = () => {
       setError('Failed to fetch top players. Please try again later.');
     }
   };
+
+  const steamProfileUrl = (steamId: string) => `https://steamcommunity.com/profiles/${steamId}`;
 
   return (
     <div className="flex flex-col h-full">
@@ -125,48 +135,64 @@ const PlayerTable: React.FC = () => {
         {error && <div className="text-red-500">{error}</div>}
         {!error && (
           <div className="overflow-x-auto flex-grow">
-            <table className="w-full text-sm text-left text-gray-300">
-              <table className="w-full text-sm text-left text-gray-300 border-separate border-spacing-y-2">
-                <thead className="text-xs uppercase text-gray-400">
-                  <tr>
-                    <th scope="col" className="px-6 py-3 bg-[#101219] rounded-l-lg w-1/6">
-                      <div className="flex items-center justify-center ml-4 text-blue-500">
-                        <RankIcon />
-                      </div>
+            <table className="w-full text-sm text-left text-gray-300 border-separate border-spacing-y-2">
+              <thead className="text-xs uppercase text-gray-400">
+                <tr>
+                  <th scope="col" className="px-6 py-3 bg-[#101219] rounded-l-lg w-1/6">
+                    <div className="flex items-center justify-center ml-4 text-blue-500">
+                      <RankIcon />
+                    </div>
+                  </th>
+                  <th scope="col" className="px-6 py-3 bg-[#101219] w-1/3">
+                    <div className="flex items-center justify-center text-blue-500">
+                      <PlayerIcon />
+                      <span className="ml-2">Player</span>
+                    </div>
+                  </th>
+                  <th scope="col" className="px-6 py-3 bg-[#101219] w-1/4">
+                    <div className="flex items-center justify-center text-blue-500">
+                      <TimeIcon />
+                      <span className="ml-2">Time</span>
+                    </div>
+                  </th>
+                  <th scope="col" className="px-6 py-3 bg-[#101219] rounded-r-lg w-1/4">
+                    <div className="flex items-center justify-center text-blue-500">
+                      <MapIcon />
+                      <span className="ml-2">Map</span>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {players.map((player, index) => (
+                  <tr key={index}>
+                    <th scope="row" className="px-6 py-4 font-medium whitespace-nowrap text-white text-center bg-[#101219] rounded-l-lg w-1/6">
+                      <span className="ml-4">{index + 1}</span>
                     </th>
-                    <th scope="col" className="px-6 py-3 bg-[#101219] w-1/3">
-                      <div className="flex items-center justify-center text-blue-500">
-                        <PlayerIcon />
-                        <span className="ml-2">Player</span>
+                    <td className="px-6 py-4 text-center bg-[#101219] w-1/3">
+                      <div className="flex items-center justify-center">
+                        {player.SteamAvatar ? (
+                          <img src={player.SteamAvatar} alt={`${player.PlayerName}'s avatar`} className="w-8 h-8 rounded-full mr-2" />
+                        ) : (
+                          <div className="w-8 h-8 rounded-full mr-2 bg-gray-600 flex items-center justify-center">
+                            <span className="text-xs">{player.PlayerName.charAt(0).toUpperCase()}</span>
+                          </div>
+                        )}
+                        <a
+                          href={steamProfileUrl(player.SteamID)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-blue-500 transition duration-300"
+                        >
+                          {player.PlayerName}
+                        </a>
                       </div>
-                    </th>
-                    <th scope="col" className="px-6 py-3 bg-[#101219] w-1/4">
-                      <div className="flex items-center justify-center text-blue-500">
-                        <TimeIcon />
-                        <span className="ml-2">Time</span>
-                      </div>
-                    </th>
-                    <th scope="col" className="px-6 py-3 bg-[#101219] rounded-r-lg w-1/4">
-                      <div className="flex items-center justify-center text-blue-500">
-                        <MapIcon />
-                        <span className="ml-2">Map</span>
-                      </div>
-                    </th>
+                    </td>
+                    <td className="px-6 py-4 text-center bg-[#101219] w-1/4">{player.FormattedTime}</td>
+                    <td className="px-6 py-4 text-center bg-[#101219] rounded-r-lg w-1/4">{player.MapName}</td>
                   </tr>
-                </thead>
-                <tbody>
-                  {players.map((player, index) => (
-                    <tr key={index}>
-                      <th scope="row" className="px-6 py-4 font-medium whitespace-nowrap text-white text-center bg-[#101219] rounded-l-lg w-1/6">
-                        <span className="ml-4">{index + 1}</span>
-                      </th>
-                      <td className="px-6 py-4 text-center bg-[#101219] w-1/3">{player.PlayerName}</td>
-                      <td className="px-6 py-4 text-center bg-[#101219] w-1/4">{player.FormattedTime}</td>
-                      <td className="px-6 py-4 text-center bg-[#101219] rounded-r-lg w-1/4">{player.MapName}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                ))}
+              </tbody>
             </table>
           </div>
         )}
