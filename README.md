@@ -4,7 +4,7 @@
 
 ![preview](https://i.imgur.com/4B4WIcX.png)
 
-## Instalation
+## Installation
 - Rename .env.template to .env and input your database credentials,
 ```
 APP_TITLE=SharpTimer
