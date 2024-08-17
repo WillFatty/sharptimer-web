@@ -15,7 +15,7 @@ const SharpTimerPanel: React.FC = () => {
       <div className="container mx-auto p-4">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold flex items-center">
-            <Image src={logo} alt="Logo" width={32} height={32} className="mr-2" />
+          <Image src={logo} alt="Logo" width={32} height={32} />
             SharpTimer
           </h1>
           <SearchBar initialQuery={''} />
