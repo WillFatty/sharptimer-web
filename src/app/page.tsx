@@ -2,8 +2,8 @@ import SharpTimerPanel from './components/SharpTimerPanel';
 
 export default function Home() {
   return (
-    <main className="bg-gray-900 text-white min-h-screen">
+    <div className="bg-gray-900 text-white min-h-screen custom-scrollbar">
       <SharpTimerPanel />
-    </main>
+    </div>
   );
 }
