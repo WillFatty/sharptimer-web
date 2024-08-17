@@ -1,5 +1,7 @@
 [sharptimer-web-panel](https://github.com/Letaryat/sharptimer-web-panel) by [Letaryat](https://github.com/Letaryat) remade in [Next.js](https://nextjs.org/)
 
+[DEMO!!](https://affinitycs2.com/sharptimer)
+
 ![preview](https://i.imgur.com/4B4WIcX.png)
 
 ## Instalation
