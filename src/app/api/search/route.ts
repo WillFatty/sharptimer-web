@@ -5,8 +5,8 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const query = searchParams.get('q');
 
-  if (!query) {
-    return NextResponse.json({ error: 'Search query is required' }, { status: 400 });
+  if (!query || query.length < 3) {
+    return NextResponse.json({ error: 'Search query must be at least 3 characters long' }, { status: 400 });
   }
 
   try {
@@ -15,7 +15,8 @@ export async function GET(request: Request) {
       (SELECT COUNT(*) + 1 FROM PlayerRecords PR2 WHERE PR2.MapName = PR.MapName AND PR2.TimerTicks < PR.TimerTicks) AS \`Rank\`
       FROM PlayerRecords PR
       WHERE PR.PlayerName LIKE ? OR PR.SteamID LIKE ?
-      ORDER BY PR.MapName, PR.TimerTicks`,
+      ORDER BY PR.MapName, PR.TimerTicks
+      LIMIT 100`,
       [`%${query}%`, `%${query}%`]
     );
 

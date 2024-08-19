@@ -1,17 +1,19 @@
 import { NextResponse } from 'next/server';
 import pool from '@/lib/db';
 
+const VALID_TYPES = new Set(['surf', 'bhop']);
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const type = searchParams.get('type');
 
-  if (!type || (type !== 'surf' && type !== 'bhop')) {
+  if (!type || !VALID_TYPES.has(type)) {
     return NextResponse.json({ error: 'Invalid type parameter' }, { status: 400 });
   }
 
   try {
     const [rows] = await pool.query(
-      'SELECT DISTINCT MapName FROM PlayerRecords WHERE MapName LIKE ? ORDER BY MapName',
+      'SELECT DISTINCT MapName FROM PlayerRecords WHERE MapName LIKE ? ORDER BY MapName LIMIT 1000',
       [`${type}%`]
     );
 

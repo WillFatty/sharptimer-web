@@ -82,14 +82,14 @@ export async function GET(request: Request) {
 
       const apiUrl = `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${STEAM_API_KEY}&steamids=${steamID64s.join(',')}`;
       const response = await fetch(apiUrl);
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
       const players = data.response.players;
-      
+
       for (const player of players) {
         const originalID = uncachedIDs[steamID64s.indexOf(player.steamid)] || player.steamid;
         result[originalID] = player.avatarmedium;

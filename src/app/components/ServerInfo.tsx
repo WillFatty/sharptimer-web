@@ -6,7 +6,6 @@ import { ServerConfig, servers } from '@/app/configs/servers';
 interface ServerInfo {
   map: string;
   playerCount: number;
-  botCount: number;
   players: string[];
 }
 
@@ -58,7 +57,6 @@ const ServerInfoDisplay: React.FC<ServerInfoDisplayProps> = ({ onJoinServer }) =
           const info = serverInfo[server.name] || {
             map: 'Unknown',
             playerCount: 0,
-            botCount: 0,
             players: [],
           };
 
@@ -72,7 +70,7 @@ const ServerInfoDisplay: React.FC<ServerInfoDisplayProps> = ({ onJoinServer }) =
               </div>
               <p className="text-blue-400 text-xs mb-1">Type: {server.type}</p>
               <p className="truncate mb-1">Map: {info.map}</p>
-              <p className="mb-1">Players: {info.playerCount} (Bots: {info.botCount})</p>
+              <p className="mb-1">Players: {info.playerCount}</p>
               {info.players.length > 0 && (
                 <details className="mt-2">
                   <summary className="cursor-pointer text-xs">Player List</summary>
